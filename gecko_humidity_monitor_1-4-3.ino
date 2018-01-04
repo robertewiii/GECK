@@ -1,5 +1,7 @@
-//Robertewiii 12/9/17, this is an update to the gecko humidity sensor that uses functions and includes more features. Version 1.4.1
+//Robertewiii 1/4/17, this is an update to the gecko humidity sensor that uses functions and includes more features. Version 1.4.3
 //added support for relay thermostat since 1.3.2, will cycle a relay off in the event temperature reaches above 80F, normally open relay, break circuit for active heating source
+//fixed issue with humidity comparison operations, issue caused status message to display the humidity to always be too high or too low and never indicated safe humidity
+//fixed issue with LCD display failing to clear characters leading to spelling errors with display messages
 #include <Wire.h>
 #include <rgb_lcd.h>
 #include "DHT.h"
@@ -102,14 +104,14 @@ void humidStatus (double humidity_par)
   
   lcd.setCursor(0, 0); //sets cursor to column 0 row 0
 
-  if (humidity_par < UPPER)
-    lcd.print("Hum.Low ");
-    
+  if (humidity_par < LOWER) 
+	lcd.print("hLow  ");
+  
   else if (humidity_par > UPPER)
-    lcd.print("Hum.High");
+    lcd.print("hHigh ");
 
   else
-    lcd.print("Hum.Safe");  
+    lcd.print("hGood ");  
   
 }
 
@@ -123,7 +125,7 @@ void tempStatus (double temp_par, bool backLight_par)
   const int RED0 = 0;
   const int GREEN0 = 0;
   const int BLUE0 = 0;
-  lcd.setCursor(9, 0); 
+  lcd.setCursor(6, 0); 
 
   if (backLight_par == LOW)
     lcd.setRGB(RED0, GREEN0, BLUE0); //check if the switch to disable the backlight is set to low, if it is, set the LCD color to (0,0,0) to turn the backlight off
@@ -139,7 +141,7 @@ void tempStatus (double temp_par, bool backLight_par)
 		  blue = 0;
 		  green = 0;
 		  //red for hot
-		  lcd.print("TH"); //TH for temp hot
+		  lcd.print("tHot  "); //tHot for temp hot
 		  if (backLight_par == HIGH)
 			  lcd.setRGB(red, green, blue);
 	}
@@ -150,7 +152,7 @@ void tempStatus (double temp_par, bool backLight_par)
 		  blue = 255;
 		  green = 0;
 		  //blue for too cold
-		  lcd.print("TC"); //TC for temp cold
+		  lcd.print("tCold "); //tCold for temp cold
 		  if (backLight_par == HIGH)
 			  lcd.setRGB(red, green, blue);
 	  }
@@ -161,7 +163,7 @@ void tempStatus (double temp_par, bool backLight_par)
 		  blue = 0;
 		  green = 255;
 		  //green for good
-		  lcd.print("TG"); //TG for temp good
+		  lcd.print("tGood "); //tGood for temp good
 		  if (backLight_par == HIGH)
 			  lcd.setRGB(red, green, blue);
 	  }
@@ -177,7 +179,7 @@ void tempStatus (double temp_par, bool backLight_par)
 		  blue = 0;
 		  green = 0;
 		  //red for hot
-		  lcd.print("TH");
+		  lcd.print("tHot  ");
 		  if (backLight_par == HIGH)
 			  lcd.setRGB(red, green, blue);
 	  }
@@ -188,7 +190,7 @@ void tempStatus (double temp_par, bool backLight_par)
 		  blue = 255;
 		  green = 0;
 		  //blue for too cold
-		  lcd.print("TC");
+		  lcd.print("tCold ");
 		  if (backLight_par == HIGH)
 			  lcd.setRGB(red, green, blue);
 	  }
@@ -199,7 +201,7 @@ void tempStatus (double temp_par, bool backLight_par)
 		  blue = 128;
 		  green = 128;
 		  //cyan for boy
-		  lcd.print("TM");
+		  lcd.print("tMale ");
 		  if (backLight_par == HIGH)
 			  lcd.setRGB(red, green, blue);
 	  }
@@ -210,7 +212,7 @@ void tempStatus (double temp_par, bool backLight_par)
 		  blue = 255;
 		  green = 0;
 		  //magenta for female
-		  lcd.print("TF");
+		  lcd.print("tFem  ");
 		  if (backLight_par == HIGH)
 			  lcd.setRGB(red, green, blue);
 
@@ -222,7 +224,7 @@ void tempStatus (double temp_par, bool backLight_par)
 		  blue = 0;
 		  green = 255;
 		  //green for good
-		  lcd.print("TG"); //TG for temp good
+		  lcd.print("tGood "); //TG for temp good
 		  if (backLight_par == HIGH)
 			  lcd.setRGB(red, green, blue);
 	  }
@@ -267,7 +269,7 @@ void sensorDisplay (double humidity, double temperature, bool celsiusDisplay, bo
   if (alertBool == true)
   {
     lcd.setCursor (12, 0); // column 15, row 0
-    lcd.print("AOn");
+    lcd.print("AOn ");
   }
   else
   {
@@ -282,11 +284,11 @@ void sensorDisplay (double humidity, double temperature, bool celsiusDisplay, bo
     lcd.setCursor(0, 1); //column 0, row 1
     lcd.print(temperature); //temp in C
     lcd.setCursor(5, 1); //column 5 row 1
-    lcd.print("C,");
+    lcd.print("C");
     lcd.setCursor(8, 1); //column 8 row 1
     lcd.print(humidity); //humidity in %RH
     lcd.setCursor(13, 1); //column 13, row 1
-    lcd.print("% Rh"); //marks the units for humidity
+    lcd.print("%Rh"); //marks the units for humidity
     delay(100); //delay 100 ms
   }
   else 
@@ -294,11 +296,11 @@ void sensorDisplay (double humidity, double temperature, bool celsiusDisplay, bo
     lcd.setCursor(0, 1); //column 0, row 1
     lcd.print(tempF); //temp in F
     lcd.setCursor(5, 1); //column 5 row 1
-    lcd.print("F,");
+    lcd.print("F");
     lcd.setCursor(8, 1); //column 8 row 1
     lcd.print(humidity); //humidity in %RH
     lcd.setCursor(13, 1); //column 13, row 1
-    lcd.print("% Rh"); //marks the units for humidity
+    lcd.print("%Rh"); //marks the units for humidity
     delay(100); //delay 100 ms
   }
 
