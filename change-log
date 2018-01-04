@@ -1,0 +1,19 @@
+1.4.3 
+Introduces tweaks to the UI to make it more intuitive and readable. Also inlcudes a major bug fix to the humidity status message.
+
+UI changes:
+*The humidity status code was drastically shortened to only take up 5 characters and the temperature status message was lengthened
+to 5 characters. This will improve readability. Status codes now include for temperature tCold, tGood, and tHot to show the temp
+as being cold, acceptable, or hot. Humidity status messages now include hLow, hGood, hHigh 
+to show humidity is too low, acceptable, or high.
+
+Bug fixes since 1.4.2:
+Major system bug:
+*Fixed error with humidity comparison logic in the humidStatus function.
+  Previously it checked if humidity was too low by comparing the humidity to the UPPER constant instead of LOWER.
+  This caused the humidity to always read too high or too low. It now compares against the LOWER constant.
+
+UI bug fixes
+*Fixed issues with LCD screen failing to clear old values in the status messages; 
+  particularly noticeable for the AOn/AOff code.
+*Adjusted indentation and spacing for the %Rh label so that it no longer gets cut off.
