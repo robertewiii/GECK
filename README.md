@@ -1,6 +1,8 @@
 # GECK
 Everything a gecko breeder needs for their temperature/humidity monitor
 
+version 1.4.3
+
 libraries used:
 https://github.com/Seeed-Studio/Grove_Temperature_And_Humidity_Sensor 
 https://github.com/Seeed-Studio/Grove_LCD_RGB_Backlight
@@ -40,12 +42,18 @@ Const double FEMALE_MIN
 Const double FEMALE_MAX
 
 
-Display messages – The bottom row of the display shows the temperature then the humidity as % relative humidity.
+Display messages – 
+The bottom row of the display shows the temperature then the humidity as % relative humidity.
 The upper left hand corner will display if the humidity is low, high, or safe/acceptable
+  hLow - humidity is too low
+  hGood - humidity is acceptable
+  hHigh - humidity is high, note that geckos do need a few hours every day with high humidity to aid with shedding
 The upper right hand corner will display if the humidity alarm is enabled or disabled
-The top row center will show two letters that indicate the temperature status denoted by the form T*, see the following to decode
-TC – temperature is cold, LCD backlight if enabled will be dark blue
-TF – “temperature female”, more female geckos will hatch than male, LCD will be magenta
-TG – “temperature good”, approximately equal numbers of male and female geckos will hatch, LCD will be green
-TM – “temperature male” more male geckos will hatch than female, lcd will be cyan
-TH – “temperature hot” temperature readings are reading too high, LCD will be a deep red
+  AOn - humidity alarm on
+  AOff - humidity alarm off
+The top row center will show the following codes to indicate the temperature status: 
+  tCold – temperature is cold, LCD backlight if enabled will be dark blue
+  tFem – “temperature female”, more female geckos will hatch than male, LCD will be magenta
+  tGood – “temperature good”, approximately equal numbers of male and female geckos will hatch, LCD will be green
+  tMale – “temperature male” more male geckos will hatch than female, lcd will be cyan
+  tHot – “temperature hot” temperature readings are reading too high, LCD will be a deep red
